@@ -19,6 +19,10 @@
     <div class="kuai kuai8"></div>
     <div class="kuai kuai9"></div>
   </div>
+  <div class="btn">
+    <div id="left">左</div>
+    <div id="right">右</div>
+  </div>
   <script>
     let x = 0
     let oldX = 0
@@ -36,10 +40,35 @@
     }
     // 鼠标放开 注销pan.onmousemove
     window.onmouseup = (e)=> {
-      console.log(e, '已经松开')
+      // console.log(e, '已经松开')
       oldX = x
       pan.onmousemove = ''
     }
+    let index = 0
+    let index11 = 1
+    left.addEventListener('click',function(){
+      // 最大值为列表长度时重置为1
+      if(index11<pan.children.length){
+        index11 += 1
+      } else {
+        index11 = 1
+      }
+      index += 1
+      pan.style.transform = `rotateX(70deg) rotateZ(${index * 40}deg)`
+      console.log(`${index11}/ ${pan.children.length}`)
+    })
+    right.addEventListener('click',function(){
+       // 最小值为列表1时重置为最大长度
+      if(index11 === 1){
+        index11 = pan.children.length
+      }
+      else {
+        index11 -= 1
+      }
+      index -= 1
+      pan.style.transform = `rotateX(70deg) rotateZ(${index * 40}deg)`
+      console.log(`${index11}/ ${pan.children.length}`)
+    })
   </script>
 </body>
 </html>
