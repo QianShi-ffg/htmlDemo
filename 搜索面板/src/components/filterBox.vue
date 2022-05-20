@@ -4,14 +4,14 @@
       <div class="left">根据资产标签筛选 ></div>
       <div class="center">
         <div class="navlist" v-for="item in filterBoxData" :key="item.id">
-          <span>{{ item.name }}</span>
           <div class="dialog">
             <ul>
-              <li v-for="iItem in item.selectedList" :key="iItem.id">
+              <li v-for="iItem in item.list" :key="iItem.id">
                 {{ iItem.name }}
               </li>
             </ul>
           </div>
+          <span>{{ item.name }}</span>
         </div>
       </div>
       <div class="right"></div>
@@ -201,24 +201,66 @@ export default {
       display: flex;
       align-items: center;
       .navlist {
+        position: relative;
         height: 24px;
         line-height: 24px;
-        color: #fff;
         margin-right: 20px;
         border: 1px solid #0060ff;
-        padding: 0 35px 0 10px;
         color: #c4d0f5;
         cursor: pointer;
         &:hover {
           border: 1px solid #01e8fe;
+          & > .dialog {
+              display: block;
+            }
         }
         span {
+          position: relative;
+          display: inline-block;
+          width: 100%;
+          height: 100%;
+          box-sizing: border-box;
+          padding: 0 35px 0 10px;
+          z-index: 10;
+          background: url(../assets/icon.png) no-repeat 80px 8px;
+          background-size: 15px;
+          // border-bottom: 1px solid #000;
           &:hover {
             color: #01e8fe;
+            border-bottom: 1px solid #000;
+            background: url(../assets/icon.png) no-repeat 80px -42px;
+            background-size: 15px;
           }
         }
         .dialog {
-
+          display: none;
+          position: absolute;
+          left: -1px;
+          top: 23px;
+          width: 340px;
+          background-color: #000b1f;
+          border: 1px solid #01e8fe;
+          z-index: 2;
+          padding: 20px 0;
+          ul {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            padding-left: 20px;
+            li {
+              width: 26%;
+              text-align: left;
+              margin-right: 16px;
+            }
+          }
+          &:hover {
+            display: block;
+            & + span {
+              border-bottom: 1px solid #000;
+            }
+          }
         }
       }
     }
