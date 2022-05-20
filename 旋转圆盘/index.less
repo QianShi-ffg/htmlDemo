@@ -12,7 +12,7 @@
 .loop(@i) when (@i <= @len) {
 	// 获取名称
   .kuai@{i} {
-    transform: rotateX(-90deg) translateY(-40px) rotateY(@i * 40deg) translateZ(-360px);
+    transform: rotateX(-90deg) translateY(-40px) rotateY(@i * 40deg) translateZ(360px);
     background-image: url('./@{i}.jpeg');
   }
   .loop(@i + 1);
@@ -30,6 +30,7 @@
   margin: auto;
   transform-style: preserve-3d;
   transform: rotateX(70deg);
+  transition: all 1s;
   .kuai {
     // border: 1px dashed #e1b945;
     transform-style: preserve-3d;
@@ -61,4 +62,29 @@ body {
   // background-size: 100% 100%;
   // // background-position: 8px 8px;
   // background-repeat: no-repeat;
+}
+.btn {
+  width: 300px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 200px;
+  margin: auto;
+  #left,#right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    background-color: #0a2157;
+    color: #fff;
+  }
+  #left {
+    left: 0;
+  }
+  #right {
+    right: 0;
+  }
 }
