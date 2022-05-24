@@ -3,10 +3,10 @@
     <section class="top">
       <div class="left">根据资产标签筛选 ></div>
       <div class="center">
-        <div class="navlist" v-for="item in filterBoxData" :key="item.id">
+        <div class="navlist" v-for="item in navList" :key="item.id">
           <div class="dialog">
             <ul>
-              <li v-for="iItem in item.list" :key="iItem.id">
+              <li v-for="iItem in item.selectedList" :key="iItem.id">
                 {{ iItem.name }}
               </li>
             </ul>
@@ -24,15 +24,9 @@
             <div class="list">
               <ul>
                 <li
-                  v-for="iItem in item.list"
-                  :key="iItem.id"
-                  @click="liSelected(iItem.id)"
-                >
-                  <i
-                    :class="
-                      selectList.includes(iItem.id) === true ? 'selected' : ''
-                    "
-                  ></i>
+                  v-for="iItem in item.list" :key="iItem.id" 
+                  @click="multipleIndex === i ? liSelected(iItem.id) : liClick(item,iItem.id)">
+                  <i :class="selectList.includes(iItem.id) === true ? 'selected' : ''"></i>
                   {{ iItem.name }}
                 </li>
               </ul>
@@ -48,7 +42,7 @@
             </div>
           </div>
           <div class="row-btn">
-            <button @click="rowBtn(i)">多 选</button>
+            <button @click="rowBtn(item,i)">多 选</button>
           </div>
         </div>
       </div>
@@ -130,48 +124,85 @@ export default {
   },
   methods: {
     //右侧多选按钮
-    rowBtn(value) {
-      this.multipleIndex = value;
-      this.selectList = [];
+    rowBtn(value, i) {
+      // 赋值当前触发行的index 改变样式
+      this.multipleIndex = i
+      // 从已选择的列表中获取当前行中的选中项 -----回显
+      const arr = this.navList.filter(item => {
+        return item.id === value.id
+      })
+      // 当选中列表中有当前列的已选项时
+      if (arr.length > 0) {
+        // 将已选择项赋值当前行的选择数组this.selectList
+        this.selectList = arr[0].selectedList.map(item => {
+          return item.id
+        })
+      } else {
+        // 若选中列表没有当前列的已选项时,将选择数组置空
+        this.selectList = []
+      }
     },
     // 取消按钮
     close() {
-      this.multipleIndex = "";
+      this.multipleIndex = ""
     },
-    // 点击勾选
+    // 单选
+    async liClick(item,value){  
+      await this.liSelected(value)
+      await this.confirm(item)
+    },
+    // 点击勾选(多选)
     liSelected(value) {
+      console.log(value, 999666)
       // 判断当前是否已勾选
       if (this.selectList.includes(value)) {
         let list = this.selectList.filter((item) => {
-          return item !== value;
+          return item !== value
         });
-        this.selectList = list;
+        this.selectList = list
       } else {
-        this.selectList.push(value);
+        this.selectList.push(value)
       }
     },
-    // 多选确定
-    confirm(value) {
+    // 数据整理
+    organizeData(value){
       let obj = {
         id: value.id,
         name: value.name,
-        selectedList: [],
-      };
+        selectedList: []
+      }
       this.selectList.map((item) => {
         value.list.filter((i) => {
           if (item === i.id) {
-            console.log(666);
-            obj.selectedList.push(i);
+            obj.selectedList.push(i)
           }
-        });
-      });
-      console.log(obj);
-      this.navList.push(obj);
-      this.selectList = [];
-      this.close();
+        })
+      })
+       // 判断当前是新增列表还是修改列表
+      let currentIndex = null
+      const currentArr = this.navList.filter((item, i)=>{
+        if(item.id === value.id){
+          currentIndex = i
+          return item
+        }
+      })
+      // 如果是修改 则去重后重新赋值
+      if(currentArr.length > 0){
+        this.navList[currentIndex].selectedList.push(...obj.selectedList)
+        this.navList[currentIndex].selectedList = [...new Set(this.navList[currentIndex].selectedList)]
+      }else {
+        // 如果是新增则push
+        this.navList.push(obj)
+      }
+      this.selectList = []
     },
-  },
-};
+    // 多选确定
+    confirm(value) {
+      this.organizeData(value)
+      this.close()
+    }
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -222,13 +253,13 @@ export default {
           box-sizing: border-box;
           padding: 0 35px 0 10px;
           z-index: 10;
-          background: url(../assets/icon.png) no-repeat 80px 8px;
+          background: url(../assets/icon.png) no-repeat calc(100% - 5px) 8px;
           background-size: 15px;
           // border-bottom: 1px solid #000;
           &:hover {
             color: #01e8fe;
             border-bottom: 1px solid #000;
-            background: url(../assets/icon.png) no-repeat 80px -42px;
+            background: url(../assets/icon.png) no-repeat calc(100% - 5px) -42px;
             background-size: 15px;
           }
         }
@@ -253,6 +284,9 @@ export default {
               width: 26%;
               text-align: left;
               margin-right: 16px;
+              &:hover {
+                color: #01e8fe;
+              }
             }
           }
           &:hover {
@@ -355,6 +389,7 @@ export default {
         right: 0;
         bottom: 10px;
         height: 35px;
+        margin: auto;
         .confirm {
           background-color: transparent;
           color: #97abea;
@@ -409,6 +444,7 @@ export default {
 }
 ul {
   list-style: none;
+  user-select: none;
 }
 button {
   border: 1px solid #0060ff;
