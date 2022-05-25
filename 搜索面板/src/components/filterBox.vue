@@ -20,7 +20,8 @@
       <div class="line" v-for="(item, i) in filterBoxData" :key="item.name">
         <div class="row" :class="multipleIndex === i ? 'multiple' : ''">
           <div class="row-key">{{ item.name }}</div>
-          <div class="row-value">
+          <vue-scroll :ops="ops">
+            <div class="row-value">
             <div class="list">
               <ul>
                 <li
@@ -41,8 +42,10 @@
               <button class="cancel" @click="close">取 消</button>
             </div>
           </div>
+          </vue-scroll>
           <div class="row-btn">
             <button @click="rowBtn(item,i)">多 选</button>
+            <button class="open" @click="open(item,i)">展 开</button>
           </div>
         </div>
       </div>
@@ -82,6 +85,442 @@ export default {
             {
               id: "dasda",
               name: "dasda",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
+            },
+            {
+              id: "asfsfa",
+              name: "asfsfa",
             },
             {
               id: "asfsfa",
@@ -141,6 +580,10 @@ export default {
         // 若选中列表没有当前列的已选项时,将选择数组置空
         this.selectList = []
       }
+    },
+    open(value, i) {
+      // 赋值当前触发行的index 改变样式
+      this.multipleIndex = i
     },
     // 取消按钮
     close() {
@@ -311,14 +754,11 @@ export default {
   .row {
     position: relative;
     width: 100%;
-    height: 40px;
     line-height: 40px;
     display: flex;
     justify-content: space-between;
-    // background-color: rgb(173, 132, 77);
     .row-key {
       width: 100px;
-      height: 100%;
       padding-left: 10px;
       white-space: nowrap;
       overflow: hidden;
@@ -329,6 +769,8 @@ export default {
       flex: 1;
       height: 100%;
       background-color: #060d44;
+      max-height: 150px;
+      overflow-y: auto;
       .btn {
         display: none;
       }
@@ -336,36 +778,32 @@ export default {
         height: 100%;
         padding: 0;
         margin: 0;
+        padding-left: 20px;
         li {
           height: 80%;
           float: left;
           margin-right: 50px;
+          text-align: left;
           cursor: pointer;
           color: #697ee4;
           &:hover {
             color: #01e8fe;
           }
-          &:first-child {
-            margin-left: 20px;
-          }
         }
       }
     }
     .row-btn {
-      width: 110px;
-      height: 100%;
+      width: 210px;
       position: relative;
       background-color: #060d44;
+      padding-top: 8px;
       button {
         position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 5px;
-        margin: auto;
+        right: 30px;
         height: 25px;
         width: 70px;
         padding-left: 20px;
-        background: url(../assets/icon.png) no-repeat 6px -61px;
+        background: url(../assets/icon.png) no-repeat 6px -60px;
         background-size: 15px;
         transition: all 0.3s;
         &:hover {
@@ -373,23 +811,44 @@ export default {
           background-size: 15px;
         }
       }
-      // overflow: hidden;
-      // zoom: 1;
-      // background-color: rgb(90, 57, 13);
+      .open {
+        padding: 0 20px 0 0;
+        left: 30px;
+        background: url(../assets/icon.png) no-repeat 88% 8px;
+        background-size: 15px;
+        &:hover {
+          background: url(../assets/icon.png) no-repeat 88% -8px;
+          background-size: 15px;
+        }
+      }
     }
   }
   .multiple {
-    height: 100px;
+    // min-height: 100px;
     .row-value {
       position: relative;
+      min-height: 90px;
+      max-height: 150px;
+      .list {
+        padding-bottom: 5px;
+        &:after {
+          content: "";
+          display: block;
+          clear: both;
+          height: 0;
+          visibility: hidden;
+        }
+        
+      }
       .btn {
         display: block;
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 10px;
+        // position: absolute;
+        // left: 0;
+        // right: 0;
+        // bottom: 10px;
+        width: 100%;
         height: 35px;
-        margin: auto;
+        // margin: auto;
         .confirm {
           background-color: transparent;
           color: #97abea;
@@ -438,7 +897,10 @@ export default {
       }
     }
     .row-btn {
-      display: none;
+      width: 210px;
+      button {
+        display: none;
+      }
     }
   }
 }
