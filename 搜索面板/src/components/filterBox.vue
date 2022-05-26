@@ -20,32 +20,33 @@
       <div class="line" v-for="(item, i) in filterBoxData" :key="item.name">
         <div class="row" :class="multipleIndex === i ? 'multiple' : ''">
           <div class="row-key">{{ item.name }}</div>
-          <vue-scroll :ops="ops">
-            <div class="row-value">
-            <div class="list">
-              <ul>
-                <li
-                  v-for="iItem in item.list" :key="iItem.id" 
-                  @click="multipleIndex === i ? liSelected(iItem.id) : liClick(item,iItem.id)">
-                  <i :class="selectList.includes(iItem.id) === true ? 'selected' : ''"></i>
-                  {{ iItem.name }}
-                </li>
-              </ul>
+            <div class="row-value" ref="rowValue">
+              <div class="list" ref="rowList">
+                <ul id="rowValueList" ref="rowValueList">
+                  <li
+                    v-for="iItem in item.list" :key="iItem.id" 
+                    :class="selectLi.includes(iItem.id) ? 'clickSelected' : ''"
+                    @click="multipleIndex === i ? liSelected(iItem.id) : liClick(item,iItem.id)">
+                    <i :class="selectList.includes(iItem.id) === true ? 'selected' : ''"></i>
+                    {{ iItem.name }}
+                  </li>
+                </ul>
+              
+              <div class="btn">
+                <button
+                  :class="selectList.length !== 0 ? 'showBtn' : 'confirm'"
+                  @click="confirm(item)"
+                >
+                  确 定
+                </button>
+                <button class="cancel" @click="close">取 消</button>
+              </div>
+                </div>
             </div>
-            <div class="btn">
-              <button
-                :class="selectList.length !== 0 ? 'showBtn' : 'confirm'"
-                @click="confirm(item)"
-              >
-                确 定
-              </button>
-              <button class="cancel" @click="close">取 消</button>
-            </div>
-          </div>
-          </vue-scroll>
           <div class="row-btn">
+            <button class="open" @click="open(i)" v-if="!isOpen && isOpenList.includes(i)">展 开</button>
+            <button class="folded" @click="open(i)" v-else-if="isOpen && isOpenList.includes(i)">收 起</button>
             <button @click="rowBtn(item,i)">多 选</button>
-            <button class="open" @click="open(item,i)">展 开</button>
           </div>
         </div>
       </div>
@@ -58,8 +59,11 @@ export default {
   name: "filterBox",
   data() {
     return {
+      isOpenList: [],
+      isOpen: false,
       multipleIndex: "",
       selectList: [],
+      selectLi: [], //当前选择的li数组
       navList: [],
       filterBoxData: [
         {
@@ -556,12 +560,50 @@ export default {
               id: "Linuxdasd",
               name: "Linuxdasd",
             },
+            {
+              id: "Linuxdasd",
+              name: "Linuxdasd",
+            },
+            {
+              id: "Linuxdasd",
+              name: "Linuxdasd",
+            },
+            {
+              id: "Linuxdasd",
+              name: "Linuxdasd",
+            },
+            {
+              id: "Linuxdasd",
+              name: "Linuxdasd",
+            },
+            {
+              id: "Linuxdasd",
+              name: "Linuxdasd",
+            },
+            {
+              id: "Linuxdasd",
+              name: "Linuxdasd",
+            },
           ],
         },
       ],
     };
   },
+  mounted() {
+    this.init()
+  },
   methods: {
+    // 判断是否显示展开按钮
+    init(){
+      let arr = []
+      console.log(this.$refs.rowValueList.length)
+      for(let i = 0;i<this.$refs.rowValueList.length;i++){
+        if(this.$refs.rowValueList[i].clientHeight > 85){
+          arr.push(i)
+        }
+      }
+      this.isOpenList = arr
+    },
     //右侧多选按钮
     rowBtn(value, i) {
       // 赋值当前触发行的index 改变样式
@@ -581,34 +623,57 @@ export default {
         this.selectList = []
       }
     },
-    open(value, i) {
+    open(i) {
       // 赋值当前触发行的index 改变样式
-      this.multipleIndex = i
+      // document.getElementById('rowValueList').scrollTop = 100
+      if(this.isOpen) {
+        
+        this.$refs.rowValue[i].classList.remove('openRow')
+        console.dir(this.$refs.rowValueList[i].scrollTop)
+      } else {
+        this.$refs.rowValue[i].classList.add('openRow')
+      }
+      this.resetscroll(i)
+      this.isOpen = !this.isOpen
+    },
+    // 点击收起时,将滚动到最上面
+    resetscroll(i) {
+      this.$nextTick(() => {
+        this.$refs.rowList[i].scrollTop = 0
+      })
     },
     // 取消按钮
     close() {
       this.multipleIndex = ""
+      this.resetscroll()
     },
     // 单选
     async liClick(item,value){  
+      // num 0 单选  1多选
       await this.liSelected(value)
-      await this.confirm(item)
+      await this.confirm(item, 0)
     },
     // 点击勾选(多选)
     liSelected(value) {
       console.log(value, 999666)
       // 判断当前是否已勾选
       if (this.selectList.includes(value)) {
-        let list = this.selectList.filter((item) => {
+        this.selectList = this.selectList.filter((item) => {
           return item !== value
-        });
-        this.selectList = list
+        })
+
+        this.selectLi = this.selectList.filter((item) => {
+          return item !== value
+        })
       } else {
+        // 当前所选的li高亮的数组
+        this.selectLi.push(value)
+        // 当前多选的li
         this.selectList.push(value)
       }
     },
     // 数据整理
-    organizeData(value){
+    organizeData(value, num){
       let obj = {
         id: value.id,
         name: value.name,
@@ -630,18 +695,22 @@ export default {
         }
       })
       // 如果是修改 则去重后重新赋值
-      if(currentArr.length > 0){
-        this.navList[currentIndex].selectedList.push(...obj.selectedList)
+      if (currentArr.length > 0) {
+        if (num === 0) {
+          this.navList[currentIndex].selectedList.push(...obj.selectedList)
+        } else {
+          this.navList[currentIndex].selectedList = obj.selectedList
+        }
         this.navList[currentIndex].selectedList = [...new Set(this.navList[currentIndex].selectedList)]
-      }else {
+      } else {
         // 如果是新增则push
         this.navList.push(obj)
       }
       this.selectList = []
     },
     // 多选确定
-    confirm(value) {
-      this.organizeData(value)
+    confirm(value, num) {
+      this.organizeData(value, num)
       this.close()
     }
   }
@@ -767,20 +836,34 @@ export default {
     }
     .row-value {
       flex: 1;
-      height: 100%;
+      // height: 40px;
+      min-height: 40px;
+      max-height: 80px;
       background-color: #060d44;
-      max-height: 150px;
-      overflow-y: auto;
+      // max-height: 150px;
+      overflow-y: hidden;
+      zoom: 1;
+      .list {
+        height: 100%;
+        overflow-y: visible;
+      }
       .btn {
         display: none;
       }
       ul {
-        height: 100%;
+        // height: 100%;
         padding: 0;
         margin: 0;
         padding-left: 20px;
+        &:after {
+          content: "";
+          display: block;
+          clear: both;
+          height: 0;
+          visibility: hidden;
+        }
         li {
-          height: 80%;
+          // height: 80%;
           float: left;
           margin-right: 50px;
           text-align: left;
@@ -790,6 +873,16 @@ export default {
             color: #01e8fe;
           }
         }
+        .clickSelected {
+          color: #01e8fe;
+        }
+      }
+    }
+    .openRow {
+      height: auto;
+      max-height: 150px;
+      .list {
+        overflow-y: scroll;
       }
     }
     .row-btn {
@@ -821,16 +914,26 @@ export default {
           background-size: 15px;
         }
       }
+      .folded {
+        padding: 0 20px 0 0;
+        left: 30px;
+        background: url(../assets/icon.png) no-repeat 88% -24px;
+        background-size: 15px;
+        &:hover {
+          background: url(../assets/icon.png) no-repeat 88% -41px;
+          background-size: 15px;
+        }
+      }
     }
   }
   .multiple {
-    // min-height: 100px;
     .row-value {
       position: relative;
-      min-height: 90px;
+      height: auto;
       max-height: 150px;
       .list {
         padding-bottom: 5px;
+        overflow-y: auto;
         &:after {
           content: "";
           display: block;
@@ -838,14 +941,10 @@ export default {
           height: 0;
           visibility: hidden;
         }
-        
       }
       .btn {
-        display: block;
-        // position: absolute;
-        // left: 0;
-        // right: 0;
-        // bottom: 10px;
+        display: flex;
+        justify-content: center;
         width: 100%;
         height: 35px;
         // margin: auto;
@@ -855,6 +954,7 @@ export default {
           border: 1px solid #97abea;
           cursor: default;
           opacity: 0.2;
+          pointer-events: none;
         }
         .cancel {
           background: transparent;
@@ -921,6 +1021,7 @@ button {
 .showBtn {
   background-color: transparent;
   color: #97abea;
+  pointer-events: auto;
   &:hover {
     background-color: #01e8fe;
     color: #000;
