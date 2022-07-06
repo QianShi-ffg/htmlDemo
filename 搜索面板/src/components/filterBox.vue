@@ -102,10 +102,11 @@ export default {
   name: "filterBox",
   data() {
     return {
+      currentList: [],
       currentType: false,
       isOpenList: [],
       openIndex: null,
-      multipleIndex: "",
+      multipleIndex: '',
       selectList: [],
       selectLi: [], // 当前选择的li数组
       navList: [],
@@ -1133,22 +1134,23 @@ export default {
     // 右侧多选按钮
     rowBtn(value, i) {
       // 赋值当前触发行的index 改变样式
-      this.multipleIndex = i;
+      this.multipleIndex = i
       // 从已选择的列表中获取当前行中的选中项 -----回显
-      const arr = this.navList.filter((item) => {
-        return item.id === value.id;
-      });
+      const arr = this.navList.filter(item => {
+        return item.id === value.id
+      })
       // 当选中列表中有当前列的已选项时
       if (arr.length > 0) {
         // 将已选择项赋值当前行的选择数组this.selectList
-        this.selectList = arr[0].selectedList.map((item) => {
-          return item.id;
-        });
+        this.selectList = arr[0].selectedList.map(item => {
+          return item.id
+        })
       } else {
         // 若选中列表没有当前列的已选项时,将选择数组置空
-        this.selectList = [];
+        this.selectList = []
       }
-      this.resetscroll(i);
+      this.currentList = [...this.selectLi]
+      this.resetscroll(i)
     },
     open(i) {
       // 赋值当前触发行的index 改变样式
@@ -1156,156 +1158,158 @@ export default {
       for (let ii = 0; ii < this.$refs.rowValue.length; ii++) {
         if (ii !== i) {
           // 判断遍历的rowValue是否有展开的样式openRow
-          if (this.$refs.rowValue[ii].classList.contains("openRow")) {
-            this.$refs.rowValue[ii].classList.remove("openRow");
+          if (this.$refs.rowValue[ii].classList.contains('openRow')) {
+            this.$refs.rowValue[ii].classList.remove('openRow')
           }
         }
       }
       // 对当前点击的一行进行样式修改
-      this.$refs.rowValue[i].classList.add("openRow");
+      this.$refs.rowValue[i].classList.add('openRow')
       // 存储当前行的index给到按钮,来控制展开与收起
-      this.openIndex = i;
+      this.openIndex = i
       // 展开的时候将之前的滚动高度置为0
-      this.resetscroll(i);
+      this.resetscroll(i)
     },
     // 收起
     folded(i) {
       // 去除当前行的展开样式
-      this.$refs.rowValue[i].classList.remove("openRow");
+      this.$refs.rowValue[i].classList.remove('openRow')
       // 将index清空
-      this.openIndex = null;
+      this.openIndex = null
     },
     // 点击收起时,将滚动到最上面
     resetscroll(i) {
       this.$nextTick(() => {
-        this.$refs.rowList[i].scrollTop = 0;
-      });
+        this.$refs.rowList[i].scrollTop = 0
+      })
     },
     // 取消按钮
     close() {
-      this.multipleIndex = "";
+      this.selectLi = [...this.currentList]
+      this.selectList = []
+      this.multipleIndex = ''
     },
     // 单选
     async liClick(item, value) {
       // num 0 单选  1多选
-      await this.liSelected(value);
-      await this.confirm(item, 0);
+      await this.liSelected(value)
+      await this.confirm(item, 0)
     },
     // 点击勾选(多选)
     liSelected(value) {
       // 判断当前是否已勾选
       if (this.selectList.includes(value)) {
         this.selectList = this.selectList.filter((item) => {
-          return item !== value;
-        });
+          return item !== value
+        })
 
         this.selectLi = this.selectLi.filter((item) => {
-          return item !== value;
-        });
+          return item !== value
+        })
       } else {
         // 当前所选的li高亮的数组
-        this.selectLi.push(value);
+        this.selectLi.push(value)
         // 当前多选的li
-        this.selectList.push(value);
+        this.selectList.push(value)
       }
     },
     // 数据整理
     organizeData(value, num) {
+      if (this.selectList.length === 0) {
+        return
+      }
       const obj = {
         id: value.id,
         name: value.name,
-        selectedList: [],
-      };
+        selectedList: []
+      }
       this.selectList.map((item) => {
         value.childList.filter((i) => {
           if (item === i.id) {
-            obj.selectedList.push(i);
+            obj.selectedList.push(i)
           }
-        });
-      });
-      // 判断当前是新增列表还是修改列表
-      let currentIndex = null;
+        })
+      })
+       // 判断当前是新增列表还是修改列表
+      let currentIndex = null
       const currentArr = this.navList.filter((item, i) => {
         if (item.id === value.id) {
-          currentIndex = i;
-          return item;
+          currentIndex = i
+          return item
         }
-      });
+      })
       // 如果是修改 则去重后重新赋值
       if (currentArr.length > 0) {
         if (num === 0) {
-          this.navList[currentIndex].selectedList.push(...obj.selectedList);
+          this.navList[currentIndex].selectedList.push(...obj.selectedList)
         } else {
-          this.navList[currentIndex].selectedList = obj.selectedList;
+          this.navList[currentIndex].selectedList = obj.selectedList
         }
-        this.navList[currentIndex].selectedList = [
-          ...new Set(this.navList[currentIndex].selectedList),
-        ];
+        this.navList[currentIndex].selectedList = [...new Set(this.navList[currentIndex].selectedList)]
       } else {
         // 如果是新增则push
-        this.navList.push(obj);
+        this.navList.push(obj)
       }
-      this.selectList = [];
+      this.selectList = []
     },
     // 多选确定
     confirm(value, num) {
-      this.organizeData(value, num);
-      this.close();
-      this.filterBoxObj();
+      this.organizeData(value, num)
+      // this.close()
+      this.multipleIndex = ''
+      // this.filterBoxObj()
     },
-    filterBoxObj() {
-      const obj = {};
-      console.log(this.navList, 111);
-      this.navList.map((item) => {
-        const childIdStr = item.selectedList
-          .map((iItem) => {
-            return iItem.id;
-          })
-          .join(",");
-        switch (item.name) {
-          case "网络域":
-            obj["netTagIds"] = childIdStr;
-            break;
-          case "组织机构":
-            obj["orgTagIds"] = childIdStr;
-            break;
-          case "资产管理员":
-            obj["personTagIds"] = childIdStr;
-            break;
-          case "资产类型":
-            obj["categoryIds"] = childIdStr;
-            break;
-          case "操作系统":
-            obj["operateSystemIds"] = childIdStr;
-            break;
-          case "资产服务":
-            obj["typeIds"] = childIdStr;
-            break;
-        }
-      });
-      this.$emit("filterSelectData", obj);
-    },
+    // filterBoxObj () {
+    //   const obj = {}
+    //   console.log(this.navList, 111)
+    //   this.navList.map(item => {
+    //     const childIdStr = item.selectedList.map(iItem => {
+    //         return iItem.id
+    //     }).join(',')
+    //     switch (item.name) {
+    //       case '网络域':
+    //         obj['netTagIds'] = childIdStr
+    //         break
+    //       case '组织机构':
+    //         obj['orgTagIds'] = childIdStr
+    //         break
+    //       case '资产管理员':
+    //         obj['personTagIds'] = childIdStr
+    //         break
+    //       case '资产类型':
+    //         obj['categoryIds'] = childIdStr
+    //         break
+    //       case '操作系统':
+    //         obj['operateSystemIds'] = childIdStr
+    //         break
+    //       case '资产服务':
+    //         obj['typeIds'] = childIdStr
+    //         break
+    //     }
+    //   })
+    //   this.$emit('filterSelectData', obj)
+    // },
     isFold() {
-      this.currentType = !this.currentType;
+      this.currentType = !this.currentType
     },
     // 删除所选大类
     closeNav(value) {
-      const arr = [];
+      const arr = []
       // 删除所选navList
-      this.navList = this.navList.filter((item) => {
-        return item.id !== value.id;
-      });
+      this.navList = this.navList.filter(item => {
+        return item.id !== value.id
+      })
       // 清除高亮
-      this.navList.map((item) => {
-        item.selectedList.map((ii) => {
-          arr.push(ii.id);
-        });
-      });
-      this.selectLi = arr;
+      this.navList.map(item => {
+        item.selectedList.map(ii => {
+          arr.push(ii.id)
+        })
+      })
+      this.selectLi = arr
       this.$nextTick(() => {
-        this.filterBoxObj(value);
-      });
-    },
+        this.filterBoxObj(value)
+      })
+    }
   },
 };
 </script>
@@ -1385,7 +1389,7 @@ export default {
           display: none;
           position: absolute;
           left: -1px;
-          top: 21px;
+          top: 23px;
           width: 400px;
           background: radial-gradient(#060d44, #000b20);
           border: 1px solid;
