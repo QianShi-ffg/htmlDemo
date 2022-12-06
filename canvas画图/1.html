@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style></style>
+
+  <body>
+    <canvas id="canvas"></canvas>
+    <script>
+      // 将图片绘制到canvas中
+      const canvasDom = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      const img = new Image();
+      img.src = "./1.webp";
+      img.onload = function () {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        const imageData = ctx.getImageData(0, 0, img.width, img.height).data;
+        console.log(imageData);
+        ctx.clearRect(0, 0, img.width, img.height);
+        ctx.fillStyle = "#fff";
+        ctx.fillRect(0, 0, img.width, img.height);
+        // console.log(distance) // 打印当前帧
+        const gap = 4;
+        const changeColor = () => {
+          for (let h = 0; h < img.height; h += gap) {
+            for (let w = 0; w < img.width; w += gap) {
+              let position = (img.width * h + w) * 4;
+              let r = imageData[position],
+                g = imageData[position + 1],
+                b = imageData[position + 2];
+              if (r + g + b < 24) {
+                ctx.fillStyle = `hsl(${num}deg 100% 50%)`;
+                ctx.fillRect(w, h, 3, 3);
+              }
+            }
+          }
+        };
+
+        let n = 1;
+        let num = 0; // 颜色变量
+        function init() {
+          num += n;
+          if (num >= 320) {
+            n = -1;
+          } else if (num <= 0) {
+            n = 1;
+          }
+          console.log(num);
+          changeColor();
+          requestAnimationFrame(init);
+        }
+        init();
+      };
+      // animationId = window.requestAnimationFrame(init); // 通知浏览器开始绘制下一帧的时候
+      // }
+    </script>
+  </body>
+</html>
