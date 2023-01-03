@@ -2,16 +2,14 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="./three.js"></script>
   <script src="./OrbitControls.js"></script>
   <title>Document</title>
 </head>
-<style>
-
-</style>
+<style></style>
 
 <body>
   <canvas class="webgl"></canvas>
@@ -75,68 +73,145 @@
     //   camera.updateProjectionMatrix();
     // });
 
-
     const sizes = {
       width: window.innerWidth,
-      height: window.innerHeight
-    }
-     // 初始化渲染器
-    const canvas = document.querySelector('canvas.webgl');
-    const renderer = new THREE.WebGLRenderer({ canvas: canvas })
-    renderer.setSize(sizes.width, sizes.height)
+      height: window.innerHeight,
+    };
+    // 初始化渲染器
+    const canvas = document.querySelector("canvas.webgl");
+    const renderer = new THREE.WebGLRenderer({
+      canvas: canvas
+    });
+    renderer.setSize(sizes.width, sizes.height);
+
     // 设置canvas像素比为当前设备屏幕像素比
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1));
 
-    const scene = new THREE.Scene()
-    scene.background = new THREE.Color(0x1A1A1A);
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x1a1a1a);
     // 雾化
-    // scene.fog = new THREE.Fog(0x1A1A1A, 1, 1000);
+    scene.fog = new THREE.Fog(0x1a1a1a, 1, 1000);
 
-    const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height)
-    camera.position.z = 3;
-    scene.add(camera)
-    camera.position.set(20, 1, 4);
-
+    const camera = new THREE.PerspectiveCamera(
+      40,
+      sizes.width / sizes.height
+    );
+    // camera.position.z = 5;
+    scene.add(camera);
+    camera.position.set(20, 50, 200);
 
     const controls = new OrbitControls(camera, renderer.domElement);
     // 开启移动惯性
     controls.enableDamping = true;
 
-    
+    const light = new THREE.PointLight(0xdeedff, 1.5);
+    scene.add(light);
+
+    const light1 = new THREE.AmbientLight(0xdeedff, 0.8);
+    scene.add(light1);
+
     // 添加内置盒子
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const SphereGeometry = new THREE.SphereGeometry(10, 60, 60);
+
+    const loader = new THREE.TextureLoader();
+    const texturePlanet = loader.load(
+      "./1000.webp"
+    );
+    texturePlanet.anisotropy = 15;
     // 设置基础网格材质 设置颜色
-    let material = new THREE.MeshBasicMaterial({wireframe: true});
-    const mesh = new THREE.Mesh(geometry, material);
-    console.log(mesh)
+    // let material = new THREE.MeshPhysicalMaterial({ color: '#bcc60d', wireframe: false })
+    const planetMaterial = new THREE.MeshLambertMaterial({
+      map: texturePlanet,
+      fog: true,
+    });
+    const mesh = new THREE.Mesh(SphereGeometry, planetMaterial);
+    console.log(mesh);
     scene.add(mesh);
 
-    let num = 0
-    // 动画
-    const tick = () => {
-      if (num >= 360) {
-        num = 0
-      }
-      num += .002
-      // 更新渲染器
-      renderer.render(scene, camera);
-      // 给网格模型添加一个转动动画
-      // mesh && (mesh.rotation.y += .02);
-      // mesh && (mesh.rotation.x += .02);
-      // 动态修改网格颜色
-      mesh && (mesh.material.color.setHSL(num, 1, 0.5));
-      // 页面重绘时调用自身
-      window.requestAnimationFrame(tick);
+    const TorusGeometry = new THREE.TorusGeometry(15, 2, 2, 120);
+    const TorusMaterial = new THREE.MeshPhysicalMaterial({
+      // color: 0x40a9ff,
+      wireframe: true,
+    });
+
+    const ring = new THREE.Mesh(TorusGeometry, TorusMaterial);
+    ring.rotation.x = Math.PI / 2;
+    ring.rotation.y = -0.1 * (Math.PI / 2);
+    // scene.add(ring);
+    console.log(ring);
+
+    const IcoGeometry = new THREE.SphereGeometry(2, 25, 25);
+
+    const texturePlanet1 = loader.load(
+      "./2333.jpg"
+    );
+    texturePlanet.anisotropy = 15;
+    // 设置基础网格材质 设置颜色
+    // let material = new THREE.MeshPhysicalMaterial({ color: '#bcc60d', wireframe: false })
+    const IcoMaterial = new THREE.MeshLambertMaterial({
+      map: texturePlanet1,
+      fog: true,
+    });
+    // const IcoMaterial = new THREE.MeshPhysicalMaterial({
+    //   color: "#bcc60d",
+    //   wireframe: false,
+    // });
+    const IconMesh = new THREE.Mesh(IcoGeometry, IcoMaterial);
+    IconMesh.position.x = -25;
+    IconMesh.position.y = 8;
+    IconMesh.position.z = 0;
+
+    scene.add(IconMesh);
+    console.log(IconMesh);
+
+    const stars = new THREE.Group();
+    for (let i = 0; i < 5000; i++) {
+      const geometry = new THREE.SphereGeometry(Math.random() * 1, 14, 14);
+      const material = new THREE.MeshPhysicalMaterial({
+        color: 0xeeeeee
+      });
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.position.x = (Math.random() - 0.5) * 900;
+      mesh.position.y = (Math.random() - 0.5) * 900;
+      mesh.position.z = (Math.random() - 0.5) * 900;
+      mesh.rotation.x = Math.random() * 2 * Math.PI;
+      mesh.rotation.y = Math.random() * 2 * Math.PI;
+      mesh.rotation.z = Math.random() * 2 * Math.PI;
+      stars.add(mesh);
     }
+    scene.add(stars);
+
+    const axis = new THREE.Vector3(0, 0, 1);
+    const axis1 = new THREE.Vector3(0, 0, 0);
+    console.log(axis, axis1)
+
+    // let num = 0
+    // // 动画
+    const tick = () => {
+      //   if (num >= 360) {
+      //     num = 0
+      //   }
+      //   num += .002
+      //   // 更新渲染器
+      renderer.render(scene, camera);
+      //   // 给网格模型添加一个转动动画
+      mesh && (mesh.rotation.y += .0005);
+      // mesh && (mesh.rotation.x += .02);
+      //   // 动态修改网格颜色
+      //   mesh && (mesh.material.color.setHSL(num, 1, 0.5));
+      //   ring && (ring.material.color.setHSL(num + 1.5, 1, 0.5));
+      //   // 页面重绘时调用自身
+      window.requestAnimationFrame(tick);
+    };
     tick();
 
     // 页面缩放事件监听
-    window.addEventListener('resize', () => {
+    window.addEventListener("resize", () => {
       sizes.width = window.innerWidth;
       sizes.height = window.innerHeight;
       // 更新渲染
       renderer.setSize(sizes.width, sizes.height);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       // 更新相机
       camera.aspect = sizes.width / sizes.height;
       camera.updateProjectionMatrix();
