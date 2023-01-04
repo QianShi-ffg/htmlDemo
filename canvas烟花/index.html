@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body style="background: #000;">
+  <canvas></canvas>
+  <script>
+    let sizes = {
+      width: window.innerWidth,
+      height: window.innerHeight
+    }
+
+    // 设置初始半径
+    let radius = 25
+    const canvas = document.querySelector('canvas')
+    canvas.width = sizes.width
+    canvas.height = sizes.height
+    const ctx = canvas.getContext('2d')
+
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    const updateCanvas = () => {
+      ctx.fillStyle = '#000';
+      // ctx.clearRect(0, 0, img.width, img.height);
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+    document.addEventListener('mousedown', (e) => {
+      // 获取鼠标位置
+      let x = e.clientX;
+      let y = e.clientY;
+      radius = 25
+      drawFireworks(x, y)
+      fire(x,y);
+    }, false);
+
+    const drawFireworks = (x, y) => {
+      const count = 12
+      for (let i = 0;i < 12; i++) {
+        // 角度
+        const rot = 360/12 * i
+        // 弧度
+        const radian = rot * (Math.PI/180)
+        // 获取各点坐标
+        const cx = x + Math.sin(radian) * radius
+        const cy = y + Math.cos(radian) * radius
+        // 开始绘制
+        ctx.beginPath()
+        ctx.arc(cx, cy, 3, 0, Math.PI*2, false)
+        ctx.closePath();
+        ctx.fillStyle = "#ff0000";
+        ctx.fill();
+      }
+    }
+
+    const fire = (x, y) => {
+      const refresh = () => {
+        // 更新canvas
+        updateCanvas()
+        drawFireworks(x, y)
+        radius ++
+        requestAnimationFrame(refresh)
+      }
+      refresh()
+    }
+
+    window.addEventListener('resize', resizeCanvas, false);
+    resizeCanvas();
+  </script>
+</body>
+
+</html>

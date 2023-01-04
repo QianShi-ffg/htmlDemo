@@ -58,11 +58,15 @@
     const texturePlanet = loader.load(
       "./1000.webp"
     );
+    const texturePlanet2 = loader.load(
+      "./1000.webp"
+    );
     // texturePlanet.anisotropy = 15;
     // 设置基础网格材质 设置颜色
     // let material = new THREE.MeshPhysicalMaterial({ color: '#bcc60d', wireframe: false })
     const planetMaterial = new THREE.MeshLambertMaterial({
       map: texturePlanet,
+      normalMap: texturePlanet2,
       fog: true,
     });
     const mesh = new THREE.Mesh(SphereGeometry, planetMaterial);
