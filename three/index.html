@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="./three.js"></script>
   <script src="./OrbitControls.js"></script>
+  <script src="./GLTFLoader.js"></script>
   <title>Document</title>
 </head>
 <style></style>
@@ -51,6 +52,23 @@
     const light1 = new THREE.AmbientLight(0xdeedff, 0.8);
     scene.add(light1);
 
+
+    const glbLoader = new GLTFLoader()
+    let yuMesh = null
+    glbLoader.load('./鱼.glb', (gltf) => {
+      console.log(gltf, 'gltfgltf')
+      yuMesh = gltf
+      if (gltf.scene) {
+        gltf.scene.children[0].geometry
+        const IcoMaterial = new THREE.MeshPhysicalMaterial({
+          color: "#ff6600",
+          wireframe: true,
+        });
+        new THREE.Mesh(gltf.scene.children[0].geometry, IcoMaterial)
+        scene.add(new THREE.Mesh(gltf.scene.children[0].geometry, IcoMaterial));
+        // scene.add(gltf.scene);
+      }
+    });
     // 添加内置盒子
     const SphereGeometry = new THREE.SphereGeometry(10, 60, 60);
 
@@ -67,7 +85,7 @@
     });
     const mesh = new THREE.Mesh(SphereGeometry, planetMaterial);
     console.log(mesh);
-    scene.add(mesh);
+    // scene.add(mesh);
 
 
     // 卫星
@@ -88,36 +106,47 @@
     // });
     const IconMesh = new THREE.Mesh(IcoGeometry, IcoMaterial);
     IconMesh.position.x = -25;
-    IconMesh.position.y = 8;
+    IconMesh.position.y =
+      8;
     IconMesh.position.z = 0;
 
-    scene.add(IconMesh);
+    // scene.add(IconMesh);
 
     // 创建一个组
     const stars = new THREE.Group();
-    for (let i = 0; i < 5000; i++) {
+    const lights = new THREE.Group();
+    for (let i = 0; i < 2000; i++) {
       // 盒子大小随机
-      const geometry = new THREE.SphereGeometry(Math.random() * 1, 14, 14);
+      const geometry = new THREE.CylinderGeometry(5, 5, 12, 100);
       // 材质为物理材质
       const material = new THREE.MeshPhysicalMaterial({
-        color: 0xeeeeee
+        color: '#ff0000'
       });
       // 随机分布
       const mesh = new THREE.Mesh(geometry, material);
       mesh.position.x = (Math.random() - 0.5) * 900;
       mesh.position.y = (Math.random() - 0.5) * 900;
       mesh.position.z = (Math.random() - 0.5) * 900;
-      mesh.rotation.x = Math.random() * 2 * Math.PI;
-      mesh.rotation.y = Math.random() * 2 * Math.PI;
-      mesh.rotation.z = Math.random() * 2 * Math.PI;
       stars.add(mesh);
+
+      const light23 = new THREE.AmbientLight(0xff0202, 1.5)
+      light23.position.x = (Math.random() - 0.5) * 900;
+      light23.position.y = (Math.random() - 0.5) * 900 - 7;
+      light23.position.z = (Math.random() - 0.5) * 900;
+      // mesh.rotation.x = Math.random() * 2 * Math.PI;
+      // mesh.rotation.y = Math.random() * 2 * Math.PI;
+      // mesh.rotation.z = Math.random() * 2 * Math.PI;
+      lights.add(light23);
+      // scene.add(lights);
     }
     scene.add(stars);
+    // scene.add(lights);
 
     // 角度
     let rot = 0
     // 动画
     const tick = () => {
+      console.log(yuMesh)
       // 更新渲染器
       renderer.render(scene, camera);
       // 给网格模型(地球)添加一个转动动画
@@ -126,8 +155,8 @@
       //   mesh && (mesh.material.color.setHSL(num, 1, 0.5));
       //   ring && (ring.material.color.setHSL(num + 1.5, 1, 0.5));
       // 星星动画
-      stars.rotation.y += 0.00008;
-      stars.rotation.z -= 0.00003;
+      stars.position.y += 0.03;
+      // stars.position.z -= 0.00003;
       // 卫星位置动画
       // 公式: Math.sin(x) 和 Math.cos(x) 其中x是弧度
       // 弧度 = 角度 * (Math.PI/180)
@@ -145,6 +174,12 @@
       IconMesh.position.z = Math.cos(radian) * 20;
       IconMesh.rotation.y += 0.005;
       IconMesh.rotation.z += 0.0005;
+
+
+      // yu
+      yuMesh && (yuMesh.position.x = Math.sin(radian) * 25);
+      yuMesh && (yuMesh.position.y = Math.cos(radian) * 5);
+      yuMesh && (yuMesh.position.z = Math.cos(radian) * 20);
       // 更新控制器,产生惯性效果
       controls.update();
       // 页面重绘时调用自身

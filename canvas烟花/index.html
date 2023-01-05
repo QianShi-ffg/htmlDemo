@@ -16,6 +16,9 @@
       height: window.innerHeight
     }
 
+    let requestId = null
+    // 粒子
+    let particle = []
     // 设置初始半径
     let radius = 25
     const canvas = document.querySelector('canvas')
@@ -38,15 +41,16 @@
       let x = e.clientX;
       let y = e.clientY;
       radius = 25
+      cancelAnimationFrame(requestId)
       drawFireworks(x, y)
       fire(x,y);
     }, false);
 
     const drawFireworks = (x, y) => {
-      const count = 12
-      for (let i = 0;i < 12; i++) {
+      const count = 150
+      for (let i = 0;i < 150; i++) {
         // 角度
-        const rot = 360/12 * i
+        const rot = 360/150 * i
         // 弧度
         const radian = rot * (Math.PI/180)
         // 获取各点坐标
@@ -64,10 +68,17 @@
     const fire = (x, y) => {
       const refresh = () => {
         // 更新canvas
-        updateCanvas()
+        // updateCanvas()
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.fillStyle = 'rgba(0,0,0,0.1)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.globalCompositeOperation = 'lighter';
+        // ctx.globalAlpha = 0.1;
+        // ctx.fillStyle = 'black';
+        // ctx.fillRect(0, 0, canvas.width, canvas.height);
         drawFireworks(x, y)
         radius ++
-        requestAnimationFrame(refresh)
+        requestId = requestAnimationFrame(refresh)
       }
       refresh()
     }
