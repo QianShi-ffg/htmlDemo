@@ -55,19 +55,20 @@
 
     const glbLoader = new GLTFLoader()
     let yuMesh = null
-    glbLoader.load('./鱼.glb', (gltf) => {
+    glbLoader.load('./girl.glb', (gltf) => {
       console.log(gltf, 'gltfgltf')
       yuMesh = gltf
       if (gltf.scene) {
         gltf.scene.children[0].geometry
-        const IcoMaterial = new THREE.MeshPhysicalMaterial({
-          color: "#ff6600",
-          wireframe: true,
-        });
+        // const IcoMaterial = new THREE.MeshPhysicalMaterial({
+        //   color: "#ff6600",
+        //   wireframe: true,
+        // });
         new THREE.Mesh(gltf.scene.children[0].geometry, IcoMaterial)
-        scene.add(new THREE.Mesh(gltf.scene.children[0].geometry, IcoMaterial));
-        // scene.add(gltf.scene);
+        // scene.add(new THREE.Mesh(gltf.scene.children[0].geometry, IcoMaterial));
+        scene.add(gltf.scene);
       }
+      scene.add(gltf)
     });
     // 添加内置盒子
     const SphereGeometry = new THREE.SphereGeometry(10, 60, 60);
@@ -177,9 +178,9 @@
 
 
       // yu
-      yuMesh && (yuMesh.position.x = Math.sin(radian) * 25);
-      yuMesh && (yuMesh.position.y = Math.cos(radian) * 5);
-      yuMesh && (yuMesh.position.z = Math.cos(radian) * 20);
+      // yuMesh && (yuMesh.position.x = Math.sin(radian) * 25);
+      // yuMesh && (yuMesh.position.y = Math.cos(radian) * 5);
+      // yuMesh && (yuMesh.position.z = Math.cos(radian) * 20);
       // 更新控制器,产生惯性效果
       controls.update();
       // 页面重绘时调用自身
